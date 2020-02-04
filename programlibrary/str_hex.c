@@ -53,3 +53,44 @@ unsigned int StringToHex(char *str, unsigned char *out, unsigned int *outlen)//s
     if(outlen != NULL) *outlen = tmplen / 2 + tmplen % 2;
     return tmplen / 2 + tmplen % 2;
 }
+
+/**
+**************************************************************************************************
+* @Brief    Hex to StringToHex       
+* @Param    
+            @pHex：address of Hex first num 
+            @pAscii: ASCII first address
+            @nlen:the lengh of Hex
+* @RetVal   
+* @Note      
+			How to use:
+						int main(int argc,char** argv)
+						{
+							unsigned char unicode_number[22]={0x00,0x31,0x00,0x37,0x00,0x38,0x00,0x31,0x00,0x31,
+                                0x00,0x30,0x00,0x30,0x00,0x30,0x00,0x39,0x00,0x32,0x00,0x37};
+							unsigned char consumer_number[100]={0};
+							int outlen = 0;
+							HexToAscii(unicode_number, consumer_number, 22);							 
+							return 0;
+						}
+**************************************************************************************************
+*/
+void HexToAscii(unsigned char *pHex, unsigned char *pAscii, int nLen)
+{
+    unsigned char Nibble[2];
+    unsigned int i,j;
+    for (i = 0; i < nLen; i++){
+        Nibble[0] = (pHex[i] & 0xF0) >> 4;
+        Nibble[1] = pHex[i] & 0x0F;
+        for (j = 0; j < 2; j++){
+            if (Nibble[j] < 10){            
+                Nibble[j] += 0x30;
+            }
+            else{
+                if (Nibble[j] < 16)
+                    Nibble[j] = Nibble[j] - 10 + 'A';
+            }
+            *pAscii++ = Nibble[j];
+        }               // for (int j = ...)
+    }           // for (int i = ...)
+}
