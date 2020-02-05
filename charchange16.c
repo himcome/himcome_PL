@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-
+#include <fcntl.h>
 
 int StringToHex(char *str, unsigned char *out, unsigned int *outlen)
 {
@@ -85,10 +85,15 @@ int main(int argc, const char** argv)
     StringToHex(argv[1], out, &outlen);
     out[outlen]=CRC16_MODBUS(out,outlen);
     out[outlen+1]=(CRC16_MODBUS(out,outlen)>>8); 
-    for(cnt = 0; cnt < (outlen+2); cnt ++)
+    strcat(out,"\n");
+    for(cnt = 0; cnt < (outlen+3); cnt ++)
     {
-       	printf("%X ",out[cnt]);
+       	printf("%02X ",out[cnt]);
     }
     putchar(10); 
+    int fp = open("test.txt", O_RDWR|O_CREAT|O_TRUNC|O_NONBLOCK); 
+    write(fp,out,strlen(out));
+    close(fp);
+
     return 0;
 }
