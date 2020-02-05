@@ -83,11 +83,12 @@ int main(int argc, const char** argv)
     unsigned char out[33];
     int outlen = 0;
     StringToHex(argv[1], out, &outlen);
-    for(cnt = 0; cnt < outlen; cnt ++)
+    out[outlen]=CRC16_MODBUS(out,outlen);
+    out[outlen+1]=(CRC16_MODBUS(out,outlen)>>8); 
+    for(cnt = 0; cnt < (outlen+2); cnt ++)
     {
-       	printf("%X ", out[cnt]);
+       	printf("%X ",out[cnt]);
     }
-    printf("%X",CRC16_MODBUS(out,outlen)); 
     putchar(10); 
     return 0;
 }
